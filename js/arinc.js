@@ -55,7 +55,8 @@ function arinc_byte_gen(input, label, SDI, DATA, SSM, BCD_st){
 
 	var arinc_byte = [ input, label, SDI, DATA, SSM, BCD_st ];	//assign to variable
 	
-	console.log("arinc_byte func succes");
+	//debug
+	console.log("arinc_byte generated");
 
 	//debug info print
 	//console.log("arinc_byte: " + arinc_byte);
@@ -126,32 +127,33 @@ function process_data(arinc_byte){
 		//SSM
 		switch(arinc_byte[4].slice(0, 2)){
 			case "00":
-				arinc_data[4] = "Plus, Północ, Wschód, Prawo, Do, Powyżej";
+				arinc_data[4] = "- 00 - Plus, Północ, Wschód, Prawo, Do, Powyżej";
 				break;
 			case "01":
-				arinc_data[4] = "Brak danych (NCD – No Computed Data)";
+				arinc_data[4] = "- 01 - Brak danych (NCD – No Computed Data)";
 				break;
 			case "10":
-				arinc_data[4] = "Test funkcjonalny (FT)";
+				arinc_data[4] = "- 10 - Test funkcjonalny (FT)";
 				break;
 			case "11":
-				arinc_data[4] = "Minus, Południe, Zachód, Lewo, Od, Poniżej";
+				arinc_data[4] = "- 11 - Minus, Południe, Zachód, Lewo, Od, Poniżej";
 				break;
 		}
 		
 		arinc_data[3] = "In BCD " + arinc_byte[3];
 		
-		
-		console.log(arinc_data[4]);
+		//debug
 		console.log("BCD SSM = " + arinc_data[4]);
+
+		arinc_data[5] = ct_parity(arinc_byte);		//check for parity bit value
 		
 	}
 	else{
 		console.log("data processing BNR");
-		//wartość informacji
+		//check data value
 		arinc_data[3] ="IN binary: " + arinc_byte[3] + "&nbsp In decimal: " + String(c_sysToDec(arinc_byte[3], 2));
 		
-		//znak BNR
+		//BNR sign check
 		switch(arinc_byte[4].charAt(0)){
 			case '0':
 				arinc_data[4] = "Plus, Północ, Wschód, Prawo, Do, Powyżej";
@@ -165,16 +167,16 @@ function process_data(arinc_byte){
 		
 		switch(arinc_byte[4].slice(1, 3)){
 			case "00":
-				arinc_data[4] += "00 - Ostrzeżenie o błędzie (FW – Failure Warning)";
+				arinc_data[4] += "- 00 - Ostrzeżenie o błędzie (FW – Failure Warning)";
 				break;
 			case "01":
-				arinc_data[4] += "01 - Brak danych (NCD – No Computed Data)";
+				arinc_data[4] += "- 01 - Brak danych (NCD – No Computed Data)";
 				break;
 			case "10":
-				arinc_data[4] += "10 - Test funkcjonalny (FT)";
+				arinc_data[4] += "- 10 - Test funkcjonalny (FT)";
 				break;
 			case "11":
-				arinc_data[4] += "11 - Dane prawidłowe (NO – Normal Operation)";
+				arinc_data[4] += "- 11 - Dane prawidłowe (NO – Normal Operation)";
 				break;
 		}
 		
@@ -203,12 +205,12 @@ function run_arinc(){
 	var boxs = document.getElementsByClassName("outbox");
 	
 	//labels for seperate arinc values
-	var box_lb = ["raw", "label", "SDI", "DATA", "SSM", "parzysty"]
+	var box_lb = ["Raw message", "Label", "SDI", "DATA", "SSM", "Bit parzystości"]
 	
 
 	//print value tags with their values
 	for(var i=0; i<boxs.length; i++){
-		boxs[i].innerHTML ="<b>" + box_lb[i] + ":</b>" + out_data[i];
+		boxs[i].innerHTML ="<b>" + box_lb[i] + ":</b> " + out_data[i];
 	}
 	
 	
