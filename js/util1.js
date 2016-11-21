@@ -110,23 +110,24 @@ function c_sysToDec(inp, sys_root){
 }
 
 function BCD_toDec(inp){
+	//conversion from BCD to decimal value
 	util ="";
 	out = "";
 	ct =0;	
 	for(var i=0; i<inp.length; i++, ct++){
-		if(ct==3){
+		if(ct==3){											//if 4 digits word completed
 			out += c_sysToDec(util, 2).toString();
 			ct=0;
 			continue;
 		}
-		else if(i==(inp.length-1)){
+		else if(i==(inp.length-1)){							//if full information completed
 			util += inp[i];
 			out += c_sysToDec(util, 2).toString();
 			ct=0;
 			break;
 			
 		}
-		else{
+		else{												//add next digit
 			util += inp[i];
 		}
 	}
@@ -147,8 +148,6 @@ function c_submitConverter(){
 	//clear stream
 	document.getElementById("out").innerHTML="";
 	
-	
-	
 	//get variables
 	var inp = document.getElementById("inp").value;
 	var i_sys_root = parseInt(document.getElementById("s_in").value);
@@ -160,28 +159,29 @@ function c_submitConverter(){
 		return;
 	}
 	//choosing operation
-	if(i_sys_root==10)
+	if(i_sys_root==10)							//from decimal
 	{
 		c_out = c_decToSys(inp, o_sys_root);
 	}
-	else if(i_sys_root=="bcd"){
+	else if(i_sys_root=="bcd"){					//bcd conversion
 		c_out = BCD_toDec(inp);
 	}
-	else if(o_sys_root == 10)
+	else if(o_sys_root == 10)					//to decimal
 	{
 		c_out = c_sysToDec(inp, i_sys_root);
 	}
-	else
+	else										//between two systems ( no decimal )
 	{
-		var util = c_sysToDec(inp, i_sys_root);
-		c_out = c_decToSys(util, o_sys_root);
+		c_out = c_sysToSys(inp, i_sys_root, o_sys_root)
 	}
 	
 	//coorect function return check
-	if(c_out!=false)
+	if(c_out!=false){										//if conversion succesful
 		document.getElementById("out").innerHTML = c_out;
-	else
-		document.getElementById("out").innerHTML = "Error occured"
+	}
+	else{													//if error occured
+		document.getElementById("out").innerHTML = "Error occured";
+	}
 	
 
 }

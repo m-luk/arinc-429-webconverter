@@ -12,7 +12,6 @@
 	margin: 0 0 1% 0;
 }
 
-
 .conv_ui {
 	
 	border: 1px solid black;
@@ -41,4 +40,10 @@
 
 #arinc_inp {
 	width: 35%;
+}
+
+/*output windows config*/
+
+.outbox b{
+	margin: 1% 1% 0 0;
 }

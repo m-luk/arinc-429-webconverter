@@ -3,14 +3,11 @@
 
 TODO: ARINC-429 description
 
-
 mluakaszewicz
 
 2016
 
 */
-
-
 //arrays scheme
 //0 checksum
 //1 label:"",
@@ -19,7 +16,6 @@ mluakaszewicz
 //4 SSM:"",
 //5 p_bit:"",
 //6 BCD_val:false
-
 
 //var arinc_byte;
 //var arinc_data;
@@ -99,7 +95,7 @@ function process_data(arinc_byte){
 	//label coded with direct conversion to octal an reverse
 	arinc_data[1] = c_sysToSys(reverse(arinc_byte[1].slice(0, 8)), 2 ,8) + " (<b>in binary from 0 to 7: </b>" + reverse(arinc_byte[1]) +"<b>)</b>";
 
-
+	//check SDI 
 	switch(arinc_byte[2]){
 		case "00":
 			arinc_data[2]="CALL ALL";
@@ -152,7 +148,7 @@ function process_data(arinc_byte){
 		console.log("data processing BNR");
 		//check data value
 		arinc_data[3] ="IN binary: " + arinc_byte[3] + "&nbsp In decimal: " + String(c_sysToDec(arinc_byte[3], 2));
-		
+			
 		//BNR sign check
 		switch(arinc_byte[4].charAt(0)){
 			case '0':
@@ -165,7 +161,7 @@ function process_data(arinc_byte){
 		
 		arinc_data[4]+=' ';
 		
-		switch(arinc_byte[4].slice(1, 3)){
+		switch(arinc_byte[4].slice(1, 3)){				//wybór SSM
 			case "00":
 				arinc_data[4] += "- 00 - Ostrzeżenie o błędzie (FW – Failure Warning)";
 				break;
@@ -183,7 +179,6 @@ function process_data(arinc_byte){
 		console.log("BNR SSM = " + arinc_byte[4]);
 		
 		arinc_data[5] = ct_parity(arinc_byte);		//check for parity bit value
-
 		
 	}
 	
@@ -212,14 +207,4 @@ function run_arinc(){
 	for(var i=0; i<boxs.length; i++){
 		boxs[i].innerHTML ="<b>" + box_lb[i] + ":</b> " + out_data[i];
 	}
-	
-	
 }
-
-
-
-
-
-
-
-

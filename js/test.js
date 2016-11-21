@@ -5,7 +5,7 @@ function test(){
 	// message "11001000 00 000000000000001 1111"
 	console.log("test1:...");
 	
-	var arinc_byte =arinc_byte_gen("1100100000000000000000000011111", "11001000", "00", "000000000000001", "111", false);
+	var arinc_byte =arinc_byte_gen("11001000000000000000000000111111", "11001000", "00", "000000000000001", "111", false);
 	
 	var arinc_data = ["", "", "", "", "", "", ""];
 	
@@ -26,7 +26,7 @@ function test2(){
 	
 	console.log("test2:...");
 	
-	var arinc_byte =arinc_byte_gen("1100100000000000000000000011111", "11001000", "00", "0000000000000011", "11", true);
+	var arinc_byte =arinc_byte_gen("11001000000000000000000000111111", "11001000", "00", "0000000000000011", "11", true);
 	
 	var x = process_data(arinc_byte);
 	
