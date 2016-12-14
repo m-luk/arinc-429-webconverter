@@ -1,25 +1,39 @@
 //TDD source file 
 
+function getTime(){
+	var current = new Date()
+	return current.getHours() + ":" + current.getMinutes() + ":" + current.getSeconds()
+}
 
-function test(){
+
+function test1(){
 	// message "11001000 00 000000000000001 1111"
-	console.log("test1:...");
+
+	//prompt messages
+	var prmpt = "test1==>";
+	var prmptt = "test1==time: "+ getTime() + " ==>";
 	
-	var arinc_byte =arinc_byte_gen("11001000000000000000000000111111", "11001000", "00", "000000000000001", "111", false);
+	//reference names array
+	var attrNames = ["checksum", "label", "SDI", "DATA", "SSM", "BCD_check"];
+
+	//start log
+	console.log("test1==>start: " + getTime() + "\n");
 	
-	var arinc_data = ["", "", "", "", "", "", ""];
-	
-	console.log(arinc_byte);
-	console.log(arinc_byte[1]);
-	arinc_byte[1] = reverse(arinc_byte[1]);
-	console.log(arinc_byte[1]);
-	
-//	arinc_data[1] = toString(c_sysToDec(arinc_byte[1].slice(0, 2), 2)) + toString(c_sysToDec(arinc_byte[1].slice(3, 5), 2)) + toString(c_sysToDec(arinc_byte[1].slice(6, 7), 2));
-	arinc_data[1] = c_sysToDec(arinc_byte[1].slice(0,3), 2) * 100 + c_sysToDec(arinc_byte[1].slice(3, 6), 2) * 10 + c_sysToDec(arinc_byte[1].slice(6, 8), 2);
-	
-	console.log(arinc_data[1]);
-	
-	
+	//generate arinc_byte check
+	var arinc_byte = arinc_byte_gen("11001000000000000000000000111111", "11001000", "00", "000000000000001", "111", false);
+
+	if(arinc_byte===false){ console.log("test1==>arinc_byte_gen failed\n");}
+	else {console.log("test1==>arinc_byte_gen passed\n");}
+
+	arinc_byte_checkArray = ["11001000000000000000000000111111", "11001000", "00", "000000000000001", "111", false];
+	for(var i=0; i<arinc_byte_checkArray.length; ++i){
+		if(arinc_byte[i] !== arinc_byte_checkArray[i]){
+			console.log(prmpt + "arinc_byte>creation>value_fail>"+attrNames[i]);
+		}
+		else{console.log(prmpt + "arinc_byte>creation>value_pass>"+attrNames[i]);}
+	}
+
+
 }
 
 function test2(){
