@@ -1,3 +1,8 @@
+body {
+	text-align: center;
+	background-color: lawngreen;
+}
+
 #maintenance {
 	width: 100px;
 	height: 100px;

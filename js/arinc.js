@@ -49,7 +49,7 @@ function arinc_byte_gen(input, label, SDI, DATA, SSM, BCD_st){
 		return false;
 	}
 
-	var arinc_byte = [ input, label, SDI, DATA, SSM, BCD_st ];	//assign to variable
+	var arinc_byte = [ input, label, SDI, DATA, SSM, BCD_st];	//assign to variable
 	
 	//debug
 	console.log("arinc_byte generated");

@@ -9,55 +9,10 @@
 <script src="js/test.js"></script>
 </head>
 <body>
-	
-<div id="num_conv">
-
-<div>Choose input system:</div>
-
-<br>
-
-<select name="i_sys_root" id="s_in" class="conv_ui">
-	<option value="2">Binary</option>
-	<option value="8">Octal</option>
-	<option value="10">Decimal</option>
-	<option value="16">Hexadecimal</option>
-	<option value="bcd">BCD</option>
-</select>
-
-<br>
-
-<input type="text" id="inp" autocomplete="off" required></input>
-
-<br>
-
-<div class="formtxt">Convert to:</div>
-
-<br>
-
-<select name="o_sys_root" id="s_out" >
-	<option value="2">Binary</option>
-	<option value="8">Octal</option>
-	<option value="10">Decimal</option>
-	<option value="16">Hexadecimal</option>
-</select>
-
-<br>
-
-<button id="makeithappen" onclick="c_submitConverter()">Convert</button>
-
-
-<div id="msg">
-
-<div class="formtxt">Result: 
-
-<main id="out"></main>
-</div>
-</div>
-</div>
 
 <div id="ARINC_conv">
-	<p class="up_space5">ARINC-429 Converter</p>
-	<p>Insert ARINC input string with bits in descending order ( 32 - 31 - 30 etc.):</p>
+	<h1>ARINC 429 Converter</h1>
+	<p class="up_space5">Insert ARINC input string with bits in descending order ( 32 - 31 - 30 etc.):</p>
 	<select name="info type" id="c_in_tp">
 		<option value="BNR">Normal - BNR</option>
 		<option value="BCD">BCD</option>
