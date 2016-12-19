@@ -1,0 +1,44 @@
+<div id="num_conv">
+
+<div>Choose input system:</div>
+
+<br>
+
+<select name="i_sys_root" id="s_in" class="conv_ui">
+	<option value="2">Binary</option>
+	<option value="8">Octal</option>
+	<option value="10">Decimal</option>
+	<option value="16">Hexadecimal</option>
+	<option value="bcd">BCD</option>
+</select>
+
+<br>
+
+<input type="text" id="inp" autocomplete="off" required></input>
+
+<br>
+
+<div class="formtxt">Convert to:</div>
+
+<br>
+
+<select name="o_sys_root" id="s_out" >
+	<option value="2">Binary</option>
+	<option value="8">Octal</option>
+	<option value="10">Decimal</option>
+	<option value="16">Hexadecimal</option>
+</select>
+
+<br>
+
+<button id="makeithappen" onclick="c_submitConverter()">Convert</button>
+
+
+<div id="msg">
+
+<div class="formtxt">Result: 
+
+<main id="out"></main>
+</div>
+</div>
+</div>

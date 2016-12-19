@@ -185,10 +185,3 @@ function c_submitConverter(){
 	
 
 }
-
-
-//decor part
-
-function decor(input, marker){
-	//TODO: decoring via JS
-}

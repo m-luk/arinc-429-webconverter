@@ -1,4 +1,14 @@
-//TDD source file 
+//TDD source file
+
+
+
+
+function equal(expected, get){
+	if(expected==get){
+
+	}
+}
+
 
 function getTime(){
 	var current = new Date()
