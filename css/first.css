@@ -52,3 +52,8 @@ body {
 .outbox b{
 	margin: 1% 1% 0 0;
 }
+
+/*test class for table*/
+.table1 {
+	border: 1;
+}

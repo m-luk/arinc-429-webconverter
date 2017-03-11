@@ -1,7 +1,4 @@
-//TDD source file
-
-
-
+//test source file
 
 function equal(expected, get){
 	if(expected==get){
@@ -9,12 +6,10 @@ function equal(expected, get){
 	}
 }
 
-
 function getTime(){
 	var current = new Date()
 	return current.getHours() + ":" + current.getMinutes() + ":" + current.getSeconds()
 }
-
 
 function test1(){
 	// message "11001000 00 000000000000001 1111"
@@ -42,8 +37,6 @@ function test1(){
 		}
 		else{console.log(prmpt + "arinc_byte>creation>value_pass>"+attrNames[i]);}
 	}
-
-
 }
 
 function test2(){
@@ -58,9 +51,9 @@ function test2(){
 	
 }
 
-
 function runTests(){
+	//test runner
+
 	test();
-	
 	test2();
 }

@@ -1,24 +1,30 @@
 //script containing ARINC-429 byte language converter
+//remoteVoyager <mlukaszewicz2@gmail.com>
 /*
 
 TODO: ARINC-429 description
 
-mluakaszewicz
+arinc_byte arrays scheme:
+index:	
+	0 - checksum (raw message)
+	1 - label
+	2 - SDI
+	3 - DATA
+	4 - SSM
+	5 - BCD boolean
 
-2016
+
+arinc_data arrays scheme:
+index:	
+	0 - checksum (raw message)
+	1 - label
+	2 - SDI
+	3 - DATA
+	4 - SSM
+	5 - p_bit
+
 
 */
-//arrays scheme
-//0 checksum
-//1 label:"",
-//2 SDI:"",
-//3 DATA:"",
-//4 SSM:"",
-//5 p_bit:"",
-//6 BCD_val:false
-
-//var arinc_byte;
-//var arinc_data;
 
 function ct_parity(arinc_byte){
 	//count occurences of '1'
@@ -53,10 +59,7 @@ function arinc_byte_gen(input, label, SDI, DATA, SSM, BCD_st){
 	
 	//debug
 	console.log("arinc_byte generated");
-
-	//debug info print
-	//console.log("arinc_byte: " + arinc_byte);
-
+	
 	return arinc_byte;
 }
 
@@ -64,6 +67,10 @@ function arinc_byte_gen(input, label, SDI, DATA, SSM, BCD_st){
 function get_data(){
 	bcd_check = document.getElementById("c_in_tp").value;					//check if BCD flag is active
 	str_inp = reverse(document.getElementById("arinc_inp").value);			//take input and reverse it 
+	if(str_inp.length!=32){													//check if input word correct length
+		console.log("ERROR - Input string diffrent than 32 bit")
+		return false;
+	}
 	var data = ["", "", "", "", "", "", ""];								//created summary array
 	if(bcd_check=="BNR"){
 		//binary label
@@ -77,25 +84,21 @@ function get_data(){
 	}
 	
 	console.log("succesfully prepared data");
-	
-	//debug
-	//console.log(data);
-	
-	return data;
+	return data;	
 }
 
 function process_data(arinc_byte){
 	var arinc_data = ["", "", "", "" ,"", "", ""];
 	
-	arinc_data[0] = arinc_byte[0];						//write the whole message to first place in data arr
+	arinc_data[0] = arinc_byte[0];						//write the whole message to 'raw message' index
 	
 	arinc_byte[1] = reverse(arinc_byte[1]);				//label write
-	//arinc_data[1] = c_sysToDec(arinc_byte[1].slice(0,3), 2) * 100 + c_sysToDec(arinc_byte[1].slice(3, 6), 2) * 10 + c_sysToDec(arinc_byte[1].slice(6, 8), 2);
 	
-	//label coded with direct conversion to octal an reverse
-	arinc_data[1] = c_sysToSys(reverse(arinc_byte[1].slice(0, 8)), 2 ,8) + " (<b>in binary from 0 to 7: </b>" + reverse(arinc_byte[1]) +"<b>)</b>";
+	//data assign label coded with direct conversion to octal an natural binary 
+	arinc_data[1] = c_sysToSys(reverse(arinc_byte[1].slice(0, 8)), 2 ,8);
+	arinc_data[1] += "  (<b>in binary from 0 to 7: </b>" + reverse(arinc_byte[1]) +"<b>)</b>";
 
-	//check SDI 
+	//check SDI value
 	switch(arinc_byte[2]){
 		case "00":
 			arinc_data[2]="CALL ALL";
@@ -111,28 +114,32 @@ function process_data(arinc_byte){
 			break;
 	}
 
-	
+	//
 	console.log("chose: " + arinc_byte[5]);
 	
+	//check conversion type
 	if(arinc_byte[5] == true){
 		//TODO: bcd value change
 		//BCD info
 		
-		console.log("processing bcd");
-		
+		console.log("data processing bcd");
+		//check data value
+		arinc_data[3] ="<b>In BCD:</b> " + arinc_byte[3] + "&nbsp <b>In decimal:</b> " + String(c_bcdToDec(arinc_byte[3]));
+
+
 		//SSM
 		switch(arinc_byte[4].slice(0, 2)){
 			case "00":
-				arinc_data[4] = "- 00 - Plus, Północ, Wschód, Prawo, Do, Powyżej";
+				arinc_data[4] = "- 00 - Plus, North, East, Right, To, Over";
 				break;
 			case "01":
-				arinc_data[4] = "- 01 - Brak danych (NCD – No Computed Data)";
+				arinc_data[4] = "- 01 - (NCD – No Computed Data)";
 				break;
 			case "10":
-				arinc_data[4] = "- 10 - Test funkcjonalny (FT)";
+				arinc_data[4] = "- 10 - (FT - Functionality Test)";
 				break;
 			case "11":
-				arinc_data[4] = "- 11 - Minus, Południe, Zachód, Lewo, Od, Poniżej";
+				arinc_data[4] = "- 11 - Minus, South, West, Left, From, Under";
 				break;
 		}
 		
@@ -147,32 +154,33 @@ function process_data(arinc_byte){
 	else{
 		console.log("data processing BNR");
 		//check data value
-		arinc_data[3] ="IN binary: " + arinc_byte[3] + "&nbsp In decimal: " + String(c_sysToDec(arinc_byte[3], 2));
+		arinc_data[3] ="<b>In binary:</b> " + arinc_byte[3] + "&nbsp <b>In decimal:</b> " + String(c_sysToDec(arinc_byte[3], 2));
 			
 		//BNR sign check
 		switch(arinc_byte[4].charAt(0)){
 			case '0':
-				arinc_data[4] = "Plus, Północ, Wschód, Prawo, Do, Powyżej";
+				arinc_data[4] = "Plus, North, East, Right, To, Over";
 				break;
 			case '1':
-				arinc_data[4] = "Minus, Południe, Zachód, Lewo, Od, Poniżej";
+				arinc_data[4] = "Minus, South, West, Left, From, Under";
 				break;
 		}
 		
 		arinc_data[4]+=' ';
 		
-		switch(arinc_byte[4].slice(1, 3)){				//wybór SSM
+		//choose SSM
+		switch(arinc_byte[4].slice(1, 3)){				
 			case "00":
-				arinc_data[4] += "- 00 - Ostrzeżenie o błędzie (FW – Failure Warning)";
+				arinc_data[4] += "- 00 - (FW – Failure Warning)";
 				break;
 			case "01":
-				arinc_data[4] += "- 01 - Brak danych (NCD – No Computed Data)";
+				arinc_data[4] += "- 01 - (NCD – No Computed Data)";
 				break;
 			case "10":
-				arinc_data[4] += "- 10 - Test funkcjonalny (FT)";
+				arinc_data[4] += "- 10 - (FT - Functionality Test)";
 				break;
 			case "11":
-				arinc_data[4] += "- 11 - Dane prawidłowe (NO – Normal Operation)";
+				arinc_data[4] += "- 11 - (NO – Normal Operation)";
 				break;
 		}
 		
@@ -187,24 +195,38 @@ function process_data(arinc_byte){
 	return arinc_data;
 }
 
-function run_arinc(){
-	//var inp = document.getElementById("arinc_inp").value;
+function run_arinc() {
+	//main runner for arinc conversion
+	
+	//clear outboxses values
+	clearClassElements("outbox");
+
+	//get output containers
+	var boxs = document.getElementsByClassName("outbox");
+
+	//data store
+	var data
 	
 	//get and convert arinc-429 data to data variable
-	var out_data =process_data(get_data());
+	//check if data import is availible
+	if(!get_data()) {
+		console.log("ERROR - Unable to collect data");
+		displayMsgInClassElements("outbox", "ERROR - Unable to collect data", 0);
+		return;
+	}
+	else { 
+		data = get_data(); 
+	}		
+	
+	var out_data = process_data(data);
 	
 	//debug, data check
 	console.log(out_data);
 	
-	//get output containers
-	var boxs = document.getElementsByClassName("outbox");
-	
 	//labels for seperate arinc values
-	var box_lb = ["Raw message", "Label", "SDI", "DATA", "SSM", "Bit parzystości"]
+	var box_lb = ["Raw message", "Label", "SDI", "DATA", "SSM", "Parity bit"];
 	
-
 	//print value tags with their values
-	for(var i=0; i<boxs.length; i++){
-		boxs[i].innerHTML ="<b>" + box_lb[i] + ":</b> " + out_data[i];
-	}
+
+	fillClassElements("outbox", out_data, box_lb, true);
 }

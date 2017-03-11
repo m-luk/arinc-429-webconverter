@@ -1,19 +1,17 @@
-//script containing main engine of numeral systems converter
-//nightspired.dev 2016
+//script containing main engine of numeric systems converter
+//remoteVoyager <mlukaszewicz2@gmail.com>
 
-function reverse(s) {
+function reverse(str) {
 	//reverses string
-	var o = "";
 	
-	for (var i = s.length - 1; i >= 0; i--)
-		o += s[i];
-	
-	return o;
+	var out = "";
+	for (var i = str.length - 1; i >= 0; i--)
+		out += str[i];
+	return out;
 }
 
 function pow(inp, root){
 	//returns inp to the power of root
-	
 	f_inp = inp;
 	if(root==0)
 		return 1;
@@ -26,6 +24,8 @@ function pow(inp, root){
 }
 
 function checkIfHex(inp) {
+	//checks if char is hex letter, if true returns its decimal representation, else returns false
+	
 	//comparision arrays
 	var hex_arr = ['A', 'B', 'C', 'D', 'E', 'F', 'a', 'b', 'c', 'd', 'e', 'f'];
 	
@@ -42,7 +42,6 @@ function checkIfHex(inp) {
 
 function c_decToSys(inp, sys_root) {
 	//converts decimal int to numeral system based on sys_root string 
-	
 	
 	var out = "";
 	var hex_arr = ['A', 'B', 'C', 'D', 'E', 'F'];
@@ -76,11 +75,8 @@ function c_decToSys(inp, sys_root) {
 				out += hex_arr[(util-10)];
 		}	
 	}
-	
 	return reverse(out);
 }
-
-
 
 function c_sysToDec(inp, sys_root){
 	//converts inp from numeral system based on sys_root to int decimal value
@@ -104,84 +100,38 @@ function c_sysToDec(inp, sys_root){
 		
 		out += (pow(sys_root, i) * j);
 	}
-
-	
 	return out;
 }
 
-function BCD_toDec(inp){
+function c_bcdToDec(inp, reversed = false, grouped = false){
 	//conversion from BCD to decimal value
-	util ="";
-	out = "";
-	ct =0;	
-	for(var i=0; i<inp.length; i++, ct++){
-		if(ct==3){											//if 4 digits word completed
-			out += c_sysToDec(util, 2).toString();
-			ct=0;
-			continue;
+	
+	if(reversed){ inp = reverse(inp); }
+	if(grouped) { inp = inp.replace(/[^0-9]/g, '')};
+
+	var quartet = "";
+	var dec_out = "";
+	var ct = 0;
+
+	for(var i=0; i<=inp.length; i++, ct++){
+		if(i==inp.length){
+			dec_out += String(c_sysToDec(quartet, 2));
 		}
-		else if(i==(inp.length-1)){							//if full information completed
-			util += inp[i];
-			out += c_sysToDec(util, 2).toString();
-			ct=0;
-			break;
-			
+		else if(ct==4){
+			dec_out += String(c_sysToDec(quartet, 2));
+			quartet = "";
+			ct=0
 		}
-		else{												//add next digit
-			util += inp[i];
+		else{
+			quartet += inp[i];
 		}
 	}
-	
-	return out;
+	return parseInt(dec_out);
 }
 
 function c_sysToSys(input, in_sys, out_sys){
 	//converts one numeric system string to another numeric system stirng
+	//no support for BCD
+	
 	return c_decToSys(c_sysToDec(input, in_sys), out_sys);
-}
-
-
-
-
-function c_submitConverter(){
-	
-	//clear stream
-	document.getElementById("out").innerHTML="";
-	
-	//get variables
-	var inp = document.getElementById("inp").value;
-	var i_sys_root = parseInt(document.getElementById("s_in").value);
-	var o_sys_root = parseInt(document.getElementById("s_out").value);
-	var c_out;
-	
-	if(inp==""){
-		document.getElementById("out").innerHTML = "Input box empty";
-		return;
-	}
-	//choosing operation
-	if(i_sys_root==10)							//from decimal
-	{
-		c_out = c_decToSys(inp, o_sys_root);
-	}
-	else if(i_sys_root=="bcd"){					//bcd conversion
-		c_out = BCD_toDec(inp);
-	}
-	else if(o_sys_root == 10)					//to decimal
-	{
-		c_out = c_sysToDec(inp, i_sys_root);
-	}
-	else										//between two systems ( no decimal )
-	{
-		c_out = c_sysToSys(inp, i_sys_root, o_sys_root)
-	}
-	
-	//coorect function return check
-	if(c_out!=false){										//if conversion succesful
-		document.getElementById("out").innerHTML = c_out;
-	}
-	else{													//if error occured
-		document.getElementById("out").innerHTML = "Error occured";
-	}
-	
-
 }

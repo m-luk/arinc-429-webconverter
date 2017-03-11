@@ -5,15 +5,19 @@
 <meta charset="utf-8">
 <link rel="stylesheet" href="css/first.css">
 <script src="js/util1.js"></script>
+<script src="js/visuals.js"></script>
 <script src="js/arinc.js"></script>
 <script src="js/test.js"></script>
 </head>
 <body>
 
 <h1>ARINC-429 system converter</h1>
+
+<p>For <b>tutorial</b>, go <a href=http://aviftech.com/files/2213/6387/8354/ARINC429_Tutorial.pdf target="_blank">HERE</a>
+</p>
 	
 <div id="ARINC_conv">
-	<p class="up_space5">Insert ARINC input string with bits in descending order ( 32 - 31 - 30 etc.):</p>
+	<p class="up_space1">Insert ARINC input string with bits in descending order ( 32 - 31 - 30 etc.):</p>
 	<select name="info type" id="c_in_tp">
 		<option value="BNR">Normal - BNR</option>
 		<option value="BCD">BCD</option>
@@ -26,12 +30,12 @@
 	<p class="up_space1">Out ( RAW_DATA - Label - SDI - DATA - SSM - P ):</p>
 	
 	<div id="arinc_out" class="up_space1">
-	<p class="outbox"></p>
-	<p class="outbox"></p>
-	<p class="outbox"></p>
-	<p class="outbox"></p>
-	<p class="outbox"></p>
-	<p class="outbox"></p>
+		<div class="outbox"></div>
+		<div class="outbox"></div>
+		<div class="outbox"></div>
+		<div class="outbox"></div>
+		<div class="outbox"></div>
+		<div class="outbox"></div>
 	</div>	
 		
 </div>
