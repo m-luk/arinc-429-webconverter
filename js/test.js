@@ -54,6 +54,6 @@ function test2(){
 function runTests(){
 	//test runner
 
-	test();
+	test1();
 	test2();
 }

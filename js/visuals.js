@@ -4,7 +4,6 @@
 //TODO: exepction handling for wrong types
 
 function clearClassElements(className){
-
     elements = document.getElementsByClassName(className);
 
     for(var i=0; i<elements.length; i++){
@@ -31,7 +30,12 @@ function fillClassElements(className, data, labels=false, boldLabel = false){
     }
 }
 
-function displayMsgInClassElements(className, msg, index){
+function displayMsgInClassElements(className, msg, index, bold = false){
     //displays message on class element array[index], if index 'all' is given, on all
-    document.getElementsByClassName(className)[index].innerHTML = msg;
+    if(bold){
+        document.getElementsByClassName(className)[index].innerHTML ="<b>" + msg + "</b>";
+    }
+    else{
+        document.getElementsByClassName(className)[index].innerHTML = msg;
+    }
 }

@@ -10,7 +10,7 @@ index:
 	1 - label
 	2 - SDI
 	3 - DATA
-	4 - SSM
+	4 - SSM + parity bit
 	5 - BCD boolean
 
 
@@ -21,7 +21,7 @@ index:
 	2 - SDI
 	3 - DATA
 	4 - SSM
-	5 - p_bit
+	5 - parity bit
 
 
 */
@@ -38,12 +38,24 @@ function ct_parity(arinc_byte){
 		util = arinc_byte[0].indexOf('1', util + 1);	//take next occurence
 	}
 
-	//debug
-	console.log(ct);
-
 	if(ct%2===0){ return 0; }				//if even number of '1'
 	else{ return 1; }						//odd number of 
 	
+}
+
+function checkIfValuesCorrect(str, values_set){
+	//check if all characters of string are equal to at least one number from values_set
+	for(var i = 0; i < str.length; i++){
+		for(var j=0; j < values_set.length; j++){
+			if(str[i]==values_set[j]){
+				break;
+			}
+			else if(j==(values_set.length-1) && str[i] != values_set[j]){
+				return false;
+			}
+		}
+	}
+	return true;
 }
 
 
@@ -51,15 +63,11 @@ function arinc_byte_gen(input, label, SDI, DATA, SSM, BCD_st){
 	//create and return concentrated arinc info (in binary state)
 
 	if(input===""){
-		console.log("arinc_byte_gen FAILED, Empty input message");
 		return false;
 	}
 
 	var arinc_byte = [ input, label, SDI, DATA, SSM, BCD_st];	//assign to variable
-	
-	//debug
-	console.log("arinc_byte generated");
-	
+		
 	return arinc_byte;
 }
 
@@ -67,23 +75,39 @@ function arinc_byte_gen(input, label, SDI, DATA, SSM, BCD_st){
 function get_data(){
 	bcd_check = document.getElementById("c_in_tp").value;					//check if BCD flag is active
 	str_inp = reverse(document.getElementById("arinc_inp").value);			//take input and reverse it 
-	if(str_inp.length!=32){													//check if input word correct length
-		console.log("ERROR - Input string diffrent than 32 bit")
+	
+	//check if inserted string is correct
+	if(!checkIfValuesCorrect(str_inp, [0, 1])){
+		console.log("ERROR - Inserted string contains non-binary characters");
+		displayMsgInClassElements("outbox", "ERROR - Inserted string contains non-binary characters", 1, true);
+		return false;
+	}	
+	else if(str_inp.length!=32){											//check if input word correct length
+		if(str_inp.length<32){
+			console.log("ERROR - Inserted string shorter than 32 bits");
+			displayMsgInClassElements("outbox", "ERROR - Inserted string shorter than 32 bits", 1, true);
+		}
+		else if(str_inp.length>32){
+			console.log("ERROR - Inserted string longer than 32 bits");
+			displayMsgInClassElements("outbox", "ERROR - Inserted string longer than 32 bits", 1, true);
+		}
+		else{
+			console.log("ERROR - Input empty");
+			displayMsgInClassElements("outbox", "ERROR - Input empty", 1, true);
+		}
 		return false;
 	}
+
 	var data = ["", "", "", "", "", "", ""];								//created summary array
+	
 	if(bcd_check=="BNR"){
-		//binary label
-		console.log("entered binary get_data");
-		data = arinc_byte_gen(reverse(str_inp) , str_inp.slice(0, 8), str_inp.slice(8,10), str_inp.slice(10, 28), str_inp.slice(28, 31), false);
+		//BNR slicing
+		data = arinc_byte_gen(reverse(str_inp) , str_inp.slice(0, 8), str_inp.slice(8,10), str_inp.slice(10, 28), str_inp.slice(28, 32), false);
 	}
 	else{
-		//BCD label
-		console.log("entered BCD get_data");
-		data = arinc_byte_gen(reverse(str_inp), str_inp.slice(0, 8), str_inp.slice(8,10), str_inp.slice(10, 29), str_inp.slice(29, 31), true);
+		//BCD slicing
+		data = arinc_byte_gen(reverse(str_inp), str_inp.slice(0, 8), str_inp.slice(8,10), str_inp.slice(10, 29), str_inp.slice(29, 32), true);
 	}
-	
-	console.log("succesfully prepared data");
 	return data;	
 }
 
@@ -114,45 +138,30 @@ function process_data(arinc_byte){
 			break;
 	}
 
-	//
-	console.log("chose: " + arinc_byte[5]);
-	
 	//check conversion type
-	if(arinc_byte[5] == true){
-		//TODO: bcd value change
-		//BCD info
-		
-		console.log("data processing bcd");
+	if(arinc_byte[5] == true){				
 		//check data value
-		arinc_data[3] ="<b>In BCD:</b> " + arinc_byte[3] + "&nbsp <b>In decimal:</b> " + String(c_bcdToDec(arinc_byte[3]));
+		arinc_data[3] ="<b>In BCD:</b> " + arinc_byte[3] + "<b>&nbsp In decimal:</b> " + String(c_bcdToDec(arinc_byte[3]));
 
-
-		//SSM
+		//select SSM
 		switch(arinc_byte[4].slice(0, 2)){
 			case "00":
-				arinc_data[4] = "- 00 - Plus, North, East, Right, To, Over";
+				arinc_data[4] = " 00 - Plus, North, East, Right, To, Over";
 				break;
 			case "01":
-				arinc_data[4] = "- 01 - (NCD – No Computed Data)";
+				arinc_data[4] = " 01 - (NCD – No Computed Data)";
 				break;
 			case "10":
-				arinc_data[4] = "- 10 - (FT - Functionality Test)";
+				arinc_data[4] = " 10 - (FT - Functionality Test)";
 				break;
 			case "11":
-				arinc_data[4] = "- 11 - Minus, South, West, Left, From, Under";
+				arinc_data[4] = " 11 - Minus, South, West, Left, From, Under";
 				break;
 		}
-		
-		arinc_data[3] = "In BCD " + arinc_byte[3];
-		
-		//debug
-		console.log("BCD SSM = " + arinc_data[4]);
 
-		arinc_data[5] = ct_parity(arinc_byte);		//check for parity bit value
-		
+		arinc_data[5] = ct_parity(arinc_byte);		//check for parity bit value	
 	}
-	else{
-		console.log("data processing BNR");
+	else{		
 		//check data value
 		arinc_data[3] ="<b>In binary:</b> " + arinc_byte[3] + "&nbsp <b>In decimal:</b> " + String(c_sysToDec(arinc_byte[3], 2));
 			
@@ -168,65 +177,51 @@ function process_data(arinc_byte){
 		
 		arinc_data[4]+=' ';
 		
-		//choose SSM
+		//select SSM
 		switch(arinc_byte[4].slice(1, 3)){				
 			case "00":
-				arinc_data[4] += "- 00 - (FW – Failure Warning)";
+				arinc_data[4] += " 00 - (FW – Failure Warning)";
 				break;
 			case "01":
-				arinc_data[4] += "- 01 - (NCD – No Computed Data)";
+				arinc_data[4] += " 01 - (NCD – No Computed Data)";
 				break;
 			case "10":
-				arinc_data[4] += "- 10 - (FT - Functionality Test)";
+				arinc_data[4] += " 10 - (FT - Functionality Test)";
 				break;
 			case "11":
-				arinc_data[4] += "- 11 - (NO – Normal Operation)";
+				arinc_data[4] += " 11 - (NO – Normal Operation)";
 				break;
 		}
-		
-		console.log("BNR SSM = " + arinc_byte[4]);
-		
+
 		arinc_data[5] = ct_parity(arinc_byte);		//check for parity bit value
 		
-	}
-	
-	console.log("proccessing succes")
-	
+	}	
 	return arinc_data;
 }
 
 function run_arinc() {
-	//main runner for arinc conversion
+	//main trigger for arinc conversion
 	
 	//clear outboxses values
 	clearClassElements("outbox");
 
 	//get output containers
 	var boxs = document.getElementsByClassName("outbox");
-
-	//data store
-	var data
 	
 	//get and convert arinc-429 data to data variable
 	//check if data import is availible
-	if(!get_data()) {
+	var data = get_data();
+
+	if(!data) {
 		console.log("ERROR - Unable to collect data");
-		displayMsgInClassElements("outbox", "ERROR - Unable to collect data", 0);
 		return;
 	}
-	else { 
-		data = get_data(); 
-	}		
-	
+
 	var out_data = process_data(data);
-	
-	//debug, data check
-	console.log(out_data);
 	
 	//labels for seperate arinc values
 	var box_lb = ["Raw message", "Label", "SDI", "DATA", "SSM", "Parity bit"];
 	
-	//print value tags with their values
-
+	//print value tags with their values	
 	fillClassElements("outbox", out_data, box_lb, true);
 }

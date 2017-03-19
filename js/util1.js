@@ -1,6 +1,9 @@
 //script containing main engine of numeric systems converter
 //remoteVoyager <mlukaszewicz2@gmail.com>
 
+//constants
+var BCD = "BCD";
+
 function reverse(str) {
 	//reverses string
 	
@@ -103,10 +106,9 @@ function c_sysToDec(inp, sys_root){
 	return out;
 }
 
-function c_bcdToDec(inp, reversed = false, grouped = false){
+function c_bcdToDec(inp, grouped = false){
 	//conversion from BCD to decimal value
-	
-	if(reversed){ inp = reverse(inp); }
+
 	if(grouped) { inp = inp.replace(/[^0-9]/g, '')};
 
 	var quartet = "";
@@ -121,6 +123,7 @@ function c_bcdToDec(inp, reversed = false, grouped = false){
 			dec_out += String(c_sysToDec(quartet, 2));
 			quartet = "";
 			ct=0
+			quartet += inp[i];
 		}
 		else{
 			quartet += inp[i];
