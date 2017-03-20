@@ -16,18 +16,20 @@
 </p>
 	
 <div id="ARINC_conv">
-	<p class="up_space1">Insert ARINC input string with bits in descending order ( 32 - 31 - 30 etc.):</p>
+	<p class="up_space1">Insert ARINC input string with bits in choosen order:</p>
 	<select name="info type" id="c_in_tp">
 		<option value="BNR">Normal - BNR</option>
 		<option value="BCD">BCD</option>
+	</select>
+	<select name="order" id="c_ord">
+		<option value="ASC">Ascending</option>
+		<option value="DESC">Descending</option>
 	</select>
 	
 	<br>
 	<input type=text id="arinc_inp" class="up_space1">
 	<button onclick="runArinc();">Run</button>
-	
-	<p class="up_space1">Out ( RAW_DATA - Label - SDI - DATA - SSM - P ):</p>
-	
+		
 	<div id="arinc_out" class="up_space1">
 		<div class="outbox"></div>
 		<div class="outbox"></div>
