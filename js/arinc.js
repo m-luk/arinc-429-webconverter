@@ -63,7 +63,6 @@ function checkIfValuesCorrect(str, values_set){
 	return true;
 }
 
-
 function arinc_byte_gen(input, label, SDI, DATA, SSM, BCD_st){
 	//create and return concentrated arinc info (in binary state)
 
@@ -76,13 +75,17 @@ function arinc_byte_gen(input, label, SDI, DATA, SSM, BCD_st){
 	return arinc_byte;
 }
 
-
 function getData(){
 	//import data and check if it matches ARINC-429 standard
 
 	//check if BCD flag is active
 	var bcd_check = document.getElementById("c_in_tp").value;
-	var str_inp = reverse(document.getElementById("arinc_inp").value);
+
+	var str_inp = document.getElementById("arinc_inp").value;
+
+	if(document.getElementById("c_ord").value === "DESC"){
+		str_inp = reverse(str_inp);
+	}
 	
 	//check if inserted string is correct
 	if(!checkIfValuesCorrect(str_inp, [0, 1])){
@@ -103,6 +106,11 @@ function getData(){
 			console.log("ERROR - Input empty");
 			displayMsgInClassElements("outbox", "ERROR - Input empty", 1, true);
 		}
+		return false;
+	}
+	else if(countParity(str_inp) != str_inp[31]){
+		console.log("ERROR - Inserted string has wrong parity bit");
+		displayMsgInClassElements("outbox", "ERROR - Inserted string has wrong parity bit", 1, true);
 		return false;
 	}
 
@@ -233,7 +241,7 @@ function runArinc() {
 	var out_data = processData(data);
 	
 	//labels for seperate arinc values
-	var box_lb = ["Raw message", "Label", "SDI", "DATA", "SSM", "Parity bit"];
+	var box_lb = ["Raw message (bits in ascending order)", "Label", "SDI", "DATA", "SSM", "Parity bit"];
 	
 	//print value tags with their values	
 	fillClassElements("outbox", out_data, box_lb, true);
