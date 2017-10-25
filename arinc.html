@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>AvThings</title>
+
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+    <!-- jQuery library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+    <!-- Latest compiled JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    
+    <!-- engine scripts -->
+    <script src="js/util1.js"></script>
+    <script src="js/store.js"></script>
+    <script src="js/visuals.js"></script>
+    <script src="js/arinc.js"></script>
+</head>
+<body>
+
+	<nav class="navbar navbar-default">
+		<div class="container-fluid">
+		  <div class="navbar-header">
+			<a class="navbar-brand" href="#">AvThings</a>
+		  </div>
+		  <ul class="nav navbar-nav">
+			<li><a href="index.html">Home</a></li>
+			<li class="active"><a href="#">Arinc 429 Converter</a></li>
+		  </ul>
+		</div>
+	  </nav>
+	  
+	<small>For <b>tutorial</b>, go <a href=http://aviftech.com/files/2213/6387/8354/ARINC429_Tutorial.pdf target="_blank">HERE</a>
+	</small>
+
+
+	
+	<div id="ARINC_conv">
+		<small>Insert ARINC input string with bits in choosen order:</small>
+		<select name="info type" id="c_in_tp">
+			<option value="BNR">Normal - BNR</option>
+			<option value="BCD">BCD</option>
+		</select>
+		<select name="order" id="c_ord">
+			<option value="ASC">Ascending</option>
+			<option value="DESC">Descending</option>
+		</select>
+		
+		<br>
+		<input type=text id="arinc_inp" class="up_space1" maxlength="32">
+		<button onclick="runArinc();">Run</button>
+			
+		<div id="arinc_out" class="up_space1" align="center" width="200px">
+			<div class="outbox"></div>
+			<div class="outbox"></div>
+			<div class="outbox"></div>
+			<div class="outbox"></div>
+			<div class="outbox"></div>
+			<div class="outbox"></div>
+		</div>
+	</div>
+
+	<!-- block for storing all previous conversions -->
+	<div id="history_block">
+		<div class="history_item">&nbsp
+		</div>
+	</div>
+
+</body>
+</html>

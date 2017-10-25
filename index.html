@@ -4,42 +4,29 @@
 <title>Converter</title>
 <meta charset="utf-8">
 <link rel="stylesheet" href="css/first.css">
-<script src="js/util1.js"></script>
-<script src="js/visuals.js"></script>
-<script src="js/arinc.js"></script>
-</head>
+
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+<!-- jQuery library -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+<!-- Latest compiled JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 <body>
-
-<h1>ARINC-429 system converter</h1>
-
-<p>For <b>tutorial</b>, go <a href=http://aviftech.com/files/2213/6387/8354/ARINC429_Tutorial.pdf target="_blank">HERE</a>
-</p>
-	
-<div id="ARINC_conv">
-	<p class="up_space1">Insert ARINC input string with bits in choosen order:</p>
-	<select name="info type" id="c_in_tp">
-		<option value="BNR">Normal - BNR</option>
-		<option value="BCD">BCD</option>
-	</select>
-	<select name="order" id="c_ord">
-		<option value="ASC">Ascending</option>
-		<option value="DESC">Descending</option>
-	</select>
-	
-	<br>
-	<input type=text id="arinc_inp" class="up_space1">
-	<button onclick="runArinc();">Run</button>
-		
-	<div id="arinc_out" class="up_space1">
-		<div class="outbox"></div>
-		<div class="outbox"></div>
-		<div class="outbox"></div>
-		<div class="outbox"></div>
-		<div class="outbox"></div>
-		<div class="outbox"></div>
-	</div>	
-		
-</div>
+	<nav class="navbar navbar-default">
+		<div class="container-fluid">
+		  <div class="navbar-header">
+			<a class="navbar-brand" href="#">AvThings</a>
+		  </div>
+		  <ul class="nav navbar-nav">
+			<li class="active"><a href="#">Home</a></li>
+			<li><a href="arinc.html">Arinc 429 Converter</a></li>
+		  </ul>
+		</div>
+	  </nav>
+	  
 
 </body>
+
 </html>

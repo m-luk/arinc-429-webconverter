@@ -1,6 +1,6 @@
 # ARINC-429-Converter
 
-App coded in JS combining elements of web programming and aviation.
+App coded in JS combining elements of web programming and aviation technologies.
 
 ## How to use it?
 * To use ARINC-429 get a little knowledge about [THAT](https://en.wikipedia.org/wiki/ARINC_429).
